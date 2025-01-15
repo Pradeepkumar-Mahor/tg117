@@ -80,6 +80,10 @@ namespace tg117.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            if (category.Guid == null)
+            {
+                category.Guid = Guid.NewGuid();
+            }
             _context.Category.Add(category);
             await _context.SaveChangesAsync();
 
