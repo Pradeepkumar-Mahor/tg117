@@ -27,56 +27,76 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(option =>
 option.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "FreeTrained",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-        };
-    });
-builder.Services.AddDataAccessService();
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = false,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = "FreeTrained",
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+//        };
+//    });
+//builder.Services.AddDataAccessService();
 
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
+//builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
+//{
+//    options.Password.RequiredLength = 8;
+//    options.Password.RequireNonAlphanumeric = true;
+//    options.Password.RequireDigit = true;
+//    options.Password.RequireUppercase = true;
+//    options.Password.RequireLowercase = true;
+//})
+//    .AddEntityFrameworkStores<AppDbContext>()
+//    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
-    options.Password.RequiredLength = 8;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireDigit = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireLowercase = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
 })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-var app = builder.Build();
-
-using (IServiceScope scope = app.Services.CreateScope())
+builder.Services.AddAuthentication(options =>
 {
-    IServiceProvider services = scope.ServiceProvider;
-    ILoggerFactory loggerFactory = services.GetRequiredService<ILoggerFactory>();
-    ILogger logger = loggerFactory.CreateLogger("app");
-    try
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        UserManager<AppUser> userManager = services.GetRequiredService<UserManager<AppUser>>();
-        RoleManager<IdentityRole> roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        await DefaultRoles.SeedAsync(userManager, roleManager);
-        await DefaultUsers.SeedBasicUserAsync(userManager, roleManager);
-        await DefaultUsers.SeedSuperAdminAsync(userManager, roleManager);
-        logger.LogInformation("Finished Seeding Default Data");
-        logger.LogInformation("Application Starting");
-    }
-    catch (Exception ex)
-    {
-        logger.LogWarning(ex, "An error occurred seeding the DB");
-    }
-}
+        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BasicPolicy", policy => policy.RequireRole(roles.RoleBasic));
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole(roles.RoleAdmin));
+    options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole(roles.RoleSuperAdmin));
+});
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -85,9 +105,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapIdentityApi<AppUser>();
-
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
