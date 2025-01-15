@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tg117.API", "tg117.API\tg117.API.csproj", "{0C324F96-7A35-4A4B-8841-1DF39938D6B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tg117.Domain", "tg117.Domain\tg117.Domain.csproj", "{1774E057-9046-4737-8D96-5CA9C4142010}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tg117.DataAccess", "tg117.DataAccess\tg117.DataAccess.csproj", "{75AD925B-9917-4CD4-8DF4-CF992989EEDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C324F96-7A35-4A4B-8841-1DF39938D6B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C324F96-7A35-4A4B-8841-1DF39938D6B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C324F96-7A35-4A4B-8841-1DF39938D6B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C324F96-7A35-4A4B-8841-1DF39938D6B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1774E057-9046-4737-8D96-5CA9C4142010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1774E057-9046-4737-8D96-5CA9C4142010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1774E057-9046-4737-8D96-5CA9C4142010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1774E057-9046-4737-8D96-5CA9C4142010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75AD925B-9917-4CD4-8DF4-CF992989EEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75AD925B-9917-4CD4-8DF4-CF992989EEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75AD925B-9917-4CD4-8DF4-CF992989EEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75AD925B-9917-4CD4-8DF4-CF992989EEDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

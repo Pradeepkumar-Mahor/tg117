@@ -1,0 +1,11 @@
+﻿Post : https://localhost:44327/login
+Post : https://localhost:44327/register
+Body -> Raw -> Json
+
+{
+  "email": "SonuMahor@gmail.com",
+  "password": "Admin@Linux22",
+  "firstname": "Sonu",
+  "middelname": "Rajaram",
+  "lastname": "Mahor"
+}
