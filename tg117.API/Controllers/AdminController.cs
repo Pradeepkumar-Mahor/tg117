@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 using tg117.API.Models.Account;
 using tg117.Domain;
+using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Controllers
 {
@@ -96,21 +100,20 @@ namespace tg117.API.Controllers
         #region AllGetRequest
 
         [HttpGet("GetUsers")]
-        public async Task<IActionResult> GetUsers([FromBody] UserRole model)
+        public async Task<IActionResult> GetUsers([FromBody] QueryParams queryParams)
         {
-            AppUser? user = await _userManager.FindByNameAsync(model.Username);
-            if (user == null)
-            {
-                return BadRequest("User not found");
-            }
+            var query = _userManager.Users;
 
-            IdentityResult result = await _userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok(new { message = "Role assigned successfully" });
-            }
+            var tt =
+                    (await PagedList<AppUser>
+                        .CreateAsync
+                            (query.AsNoTracking(),
+                                queryParams.PageNumber,
+                                queryParams.PageSize
+                            )
+                     );
 
-            return BadRequest(result.Errors);
+            return new JsonResult(tt);
         }
 
         [HttpGet("GetRoles")]

@@ -1,44 +1,61 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Numerics;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Classes
 {
     public static class GenericClass
     {
-        public class PaginatedModel
+        public class QueryParams
         {
-            public int count { get; set; }
-            public int pageIndex { get; set; }
-            public int pageSize { get; set; }
+            private const int MaxPageSize = 50;
+            public int PageNumber { get; set; } = 1;
+            private int _pageSize = 10;
+
+            public int PageSize
+            {
+                get => _pageSize;
+                set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
+            }
         }
 
-        public class PaginatedList<T> : List<T>
+        public class PagedList<T> : List<T>
         {
-            public int PageIndex { get; private set; }
-            public int TotalPages { get; private set; }
-
-            public PaginatedList(List<T> items, PaginatedModel paginatedModel)
+            public PagedList(IEnumerable<T> currentPage, int count, int pageNumber, int pageSize)
             {
-                PageIndex = paginatedModel.pageIndex;
-                TotalPages = (int)Math.Ceiling(paginatedModel.count / (double)paginatedModel.pageSize);
-
-                this.AddRange(items);
+                CurrentPage = pageNumber;
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+                PageSize = pageSize;
+                TotalCount = count;
+                AddRange(currentPage);
             }
 
-            public bool HasPreviousPage => PageIndex > 1;
+            public int CurrentPage { get; set; }
+            public int TotalPages { get; set; }
+            public int PageSize { get; set; }
+            public int TotalCount { get; set; }
 
-            public bool HasNextPage => PageIndex < TotalPages;
-
-            public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+            public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
             {
                 var count = await source.CountAsync();
-                var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-                PaginatedModel paginatedModel = new PaginatedModel();
-                paginatedModel.count = count;
-                paginatedModel.pageIndex = pageIndex;
-                paginatedModel.pageSize = pageSize;
-                return new PaginatedList<T>(items, paginatedModel);
+                var items = await source.Skip((pageNumber) * pageSize).Take(pageSize).ToListAsync();
+                return new PagedList<T>(items, count, pageNumber, pageSize);
             }
+        }
+
+        public static string JSONSerialize<T>(T obj)
+        {
+            string retVal = String.Empty;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+                serializer.WriteObject(ms, obj);
+                var byteArray = ms.ToArray();
+                retVal = Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
+            }
+            return retVal;
         }
     }
 }
