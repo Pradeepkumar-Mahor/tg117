@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tg117.Domain;
@@ -34,7 +29,7 @@ namespace tg117.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(Guid id)
         {
-            var category = await _context.Category.FindAsync(id);
+            Category? category = await _context.Category.FindAsync(id);
 
             if (category == null)
             {
@@ -58,7 +53,7 @@ namespace tg117.API.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                _ = await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,8 +79,8 @@ namespace tg117.API.Controllers
             {
                 category.Guid = Guid.NewGuid();
             }
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
+            _ = _context.Category.Add(category);
+            _ = await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCategory", new { id = category.Guid }, category);
         }
@@ -94,14 +89,14 @@ namespace tg117.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            var category = await _context.Category.FindAsync(id);
+            Category? category = await _context.Category.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
+            _ = _context.Category.Remove(category);
+            _ = await _context.SaveChangesAsync();
 
             return NoContent();
         }

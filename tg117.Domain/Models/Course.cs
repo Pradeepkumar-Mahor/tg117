@@ -10,12 +10,12 @@ namespace tg117.Domain
 
         [Required]
         [Display(Name = "Course Name")]
-        public string CourseName { get; set; }
+        public required string CourseName { get; set; }
 
         [Required]
-        public string Categories { get; set; }
+        public required string Categories { get; set; }
 
-        public string CourseBy { get; set; }
+        public required string CourseBy { get; set; }
 
         [Required]
         public double Price { get; set; }
@@ -23,22 +23,22 @@ namespace tg117.Domain
         public int Duration { get; set; }
 
         [Display(Name = "Description")]
-        public string LongDesc { get; set; }
+        public required string LongDesc { get; set; }
 
         [DataType(DataType.ImageUrl)]
         [Display(Name = "Image")]
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
 
         [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+        public required Category Category { get; set; }
 
         [Required]
         public int FrequencyId { get; set; }
 
         [ForeignKey("FrequencyId")]
-        public Frequency Frequency { get; set; }
+        public required Frequency Frequency { get; set; }
     }
 }

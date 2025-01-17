@@ -8,26 +8,26 @@ namespace tg117.Domain.Models
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
-        public string Phone { get; set; }
+        public required string Phone { get; set; }
 
         [Required]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
-        public string Address { get; set; }
+        public required string Address { get; set; }
 
         [Required]
-        public string City { get; set; }
+        public required string City { get; set; }
 
         [Required]
-        public string ZipCode { get; set; }
+        public required string ZipCode { get; set; }
 
         public DateTime OrderDate { get; set; }
-        public string Status { get; set; }
-        public string Comments { get; set; }
+        public required string Status { get; set; }
+        public required string Comments { get; set; }
         public int ServiceCount { get; set; }
     }
 }

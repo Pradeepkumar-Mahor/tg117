@@ -12,6 +12,6 @@ namespace tg117.Domain
 
         [Required]
         [Display(Name = "Frequency Name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 }

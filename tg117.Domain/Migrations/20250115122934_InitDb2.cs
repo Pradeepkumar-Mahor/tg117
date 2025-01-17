@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,11 +10,11 @@ namespace tg117.Domain.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Guid",
                 table: "AspNetUsers");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "MiddelName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -23,7 +22,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "LastName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -31,7 +30,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "FirstName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -43,7 +42,7 @@ namespace tg117.Domain.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "MiddelName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -53,7 +52,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "LastName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -63,7 +62,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "FirstName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -73,7 +72,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<Guid>(
+            _ = migrationBuilder.AddColumn<Guid>(
                 name: "Guid",
                 table: "AspNetUsers",
                 type: "uniqueidentifier",

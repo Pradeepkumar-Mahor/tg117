@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
@@ -29,7 +28,7 @@ namespace tg117.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            var user = new AppUser
+            AppUser user = new()
             {
                 UserName = model.Username,
                 Email = model.Email,
@@ -41,15 +40,15 @@ namespace tg117.API.Controllers
                 Country = model.Country,
                 PostalCode = model.PostalCode
             };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
                 if (!_roleManager.RoleExistsAsync(roleName: roles.RoleBasic).GetAwaiter().GetResult())
                 {
-                    _roleManager.CreateAsync(new IdentityRole(roles.RoleBasic)).GetAwaiter().GetResult();
+                    _ = _roleManager.CreateAsync(new IdentityRole(roles.RoleBasic)).GetAwaiter().GetResult();
                 }
-                await _userManager.AddToRoleAsync(user, roles.RoleBasic);
+                _ = await _userManager.AddToRoleAsync(user, roles.RoleBasic);
                 return Ok(new { message = "User registered successfully" });
             }
 
@@ -59,12 +58,16 @@ namespace tg117.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
+            AppUser? user = await _userManager.FindByNameAsync(model.Username);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(model.Username);
+            }
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
+                IList<string> userRoles = await _userManager.GetRolesAsync(user);
 
-                var authClaims = new List<Claim>
+                List<Claim> authClaims = new()
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -72,7 +75,7 @@ namespace tg117.API.Controllers
 
                 authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-                var token = new JwtSecurityToken(
+                JwtSecurityToken token = new(
                     issuer: _configuration["Jwt:Issuer"],
                     expires: DateTime.Now.AddMinutes(double.Parse(_configuration["Jwt:ExpiryMinutes"]!)),
                     claims: authClaims,
@@ -83,41 +86,6 @@ namespace tg117.API.Controllers
             }
 
             return Unauthorized();
-        }
-
-        [HttpPost("add-role")]
-        public async Task<IActionResult> AddRole([FromBody] string role)
-        {
-            if (!await _roleManager.RoleExistsAsync(role))
-            {
-                var result = await _roleManager.CreateAsync(new IdentityRole(role));
-                if (result.Succeeded)
-                {
-                    return Ok(new { message = "Role added successfully" });
-                }
-
-                return BadRequest(result.Errors);
-            }
-
-            return BadRequest("Role already exists");
-        }
-
-        [HttpPost("assign-role")]
-        public async Task<IActionResult> AssignRole([FromBody] UserRole model)
-        {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user == null)
-            {
-                return BadRequest("User not found");
-            }
-
-            var result = await _userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok(new { message = "Role assigned successfully" });
-            }
-
-            return BadRequest(result.Errors);
         }
     }
 }

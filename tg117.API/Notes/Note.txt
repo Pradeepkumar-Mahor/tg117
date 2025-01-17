@@ -1,11 +1,26 @@
-﻿Post : https://localhost:44327/login
-Post : https://localhost:44327/register
-Body -> Raw -> Json
+﻿Post : https://localhost:44327/api/Account/login
+Post : https://localhost:44327/api/Account/register
 
+Body -> Raw -> Json
 {
-  "email": "SonuMahor@gmail.com",
+  "email": "PradeepMahor47@gmail.com",
   "password": "Admin@Linux22",
-  "firstname": "Sonu",
+  "FirstName": "Pradeep",
   "middelname": "Rajaram",
-  "lastname": "Mahor"
+  "lastname": "Mahor",
+  "username": "PradeepMahor",
+  "city": "Pune",
+  "state": "Maharashtra",
+  "country": "India",
+  "postalCode": 41004,
+  "skillOrOccupation": "",
+  "biography": "",
+  "streetAddress": "VTp Leonara",
+  "profilePhoto": "",
+  "coverPhoto": "",
+  "facebookLink": "",
+  "twitterLink": "",
+  "linkedinLink": "",
+  "websiteLink": "",
+  "gitHubLink": ""
 }

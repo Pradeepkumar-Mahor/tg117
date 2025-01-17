@@ -9,7 +9,7 @@ namespace tg117.Domain
 
         [Required]
         [Display(Name = "Category Name")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [Display(Name = "Display Order")]

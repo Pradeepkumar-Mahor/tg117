@@ -11,16 +11,16 @@ namespace tg117.Domain.Models
         public int OrderHeaderId { get; set; }
 
         [ForeignKey("OrderHeaderId")]
-        public OrderHeader OrderHeader { get; set; }
+        public required OrderHeader OrderHeader { get; set; }
 
         [Required]
         public int ServiceId { get; set; }
 
         [ForeignKey("ServiceId")]
-        public Course Service { get; set; }
+        public required Course Service { get; set; }
 
         [Required]
-        public string ServiceName { get; set; }
+        public required string ServiceName { get; set; }
 
         [Required]
         public double Price { get; set; }

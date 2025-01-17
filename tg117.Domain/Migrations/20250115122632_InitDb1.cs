@@ -10,7 +10,7 @@ namespace tg117.Domain.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "WebsiteLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -18,7 +18,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "TwitterLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -26,7 +26,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "StreetAddress",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -34,7 +34,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "State",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -42,7 +42,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "SkillOrOccupation",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -50,7 +50,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "ProfilePhoto",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -58,7 +58,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "LinkedinLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -66,7 +66,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "GitHubLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -74,7 +74,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "FacebookLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -82,7 +82,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "CoverPhoto",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -90,7 +90,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Country",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -98,7 +98,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "City",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -106,7 +106,7 @@ namespace tg117.Domain.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Biography",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -118,7 +118,7 @@ namespace tg117.Domain.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "WebsiteLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -128,7 +128,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "TwitterLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -138,7 +138,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "StreetAddress",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -148,7 +148,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "State",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -158,7 +158,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "SkillOrOccupation",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -168,7 +168,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "ProfilePhoto",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -178,7 +178,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "LinkedinLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -188,7 +188,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "GitHubLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -198,7 +198,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "FacebookLink",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -208,7 +208,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "CoverPhoto",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -218,7 +218,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Country",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -228,7 +228,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "City",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -238,7 +238,7 @@ namespace tg117.Domain.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Biography",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",

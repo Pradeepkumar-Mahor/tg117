@@ -10,7 +10,7 @@ using tg117.Domain.DbContext;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 byte[] secretBytes = new byte[64];
-using (var random = RandomNumberGenerator.Create())
+using (RandomNumberGenerator random = RandomNumberGenerator.Create())
 {
     random.GetBytes(secretBytes);
 }
@@ -96,13 +96,13 @@ builder.Services.AddAuthorization(options =>
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
