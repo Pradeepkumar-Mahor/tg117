@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tg117.Domain;
 using tg117.Domain.DbContext;
+using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Controllers
 {
@@ -20,9 +21,21 @@ namespace tg117.API.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
+        public async Task<IActionResult> GetCategory([FromBody] QueryParams queryParams)
         {
-            return await _context.Category.ToListAsync();
+            if (queryParams == null)
+            {
+                return BadRequest("User not found");
+            }
+            List<Category> query = await _context.Category.ToListAsync();
+
+            PagedList<Category> retsult =
+                            await PagedList<Category>.ReturnListAsync
+                                (
+                                    query, queryParams.PageNumber, queryParams.PageSize)
+                                ;
+
+            return new JsonResult(retsult);
         }
 
         // GET: api/Categories/5

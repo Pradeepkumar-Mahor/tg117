@@ -102,12 +102,16 @@ namespace tg117.API.Controllers
         [HttpGet("GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody] QueryParams queryParams)
         {
+            if (queryParams == null)
+            {
+                return BadRequest("User not found");
+            }
             var query = _userManager.Users;
 
             var tt =
                     (await PagedList<AppUser>
                         .CreateAsync
-                            (query.AsNoTracking(),
+                            (query,
                                 queryParams.PageNumber,
                                 queryParams.PageSize
                             )
@@ -117,57 +121,53 @@ namespace tg117.API.Controllers
         }
 
         [HttpGet("GetRoles")]
-        public async Task<IActionResult> GetRoles([FromBody] UserRole model)
+        public async Task<IActionResult> GetRoles([FromBody] QueryParams queryParams)
         {
-            AppUser? user = await _userManager.FindByNameAsync(model.Username);
-            if (user == null)
+            if (queryParams == null)
             {
                 return BadRequest("User not found");
             }
+            var query = _roleManager.Roles;
 
-            IdentityResult result = await _userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok(new { message = "Role assigned successfully" });
-            }
+            var tt =
+                    (await PagedList<IdentityRole>
+                        .CreateAsync
+                            (query,
+                                queryParams.PageNumber,
+                                queryParams.PageSize
+                            )
+                     );
 
-            return BadRequest(result.Errors);
+            return new JsonResult(tt);
         }
 
         [HttpGet("UserDetails")]
-        public async Task<IActionResult> UserDetails([FromBody] UserRole model)
+        public async Task<IActionResult> UserDetails([FromBody] string username)
         {
-            AppUser? user = await _userManager.FindByNameAsync(model.Username);
+            if (username == null)
+            {
+                return BadRequest("User not found");
+            }
+            AppUser? user = await _userManager.FindByNameAsync(username);
             if (user == null)
             {
                 return BadRequest("User not found");
             }
 
-            IdentityResult result = await _userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok(new { message = "Role assigned successfully" });
-            }
-
-            return BadRequest(result.Errors);
+            return new JsonResult(user);
         }
 
         [HttpGet("UsersInRole")]
-        public async Task<IActionResult> UsersInRole([FromBody] UserRole model)
+        public async Task<IActionResult> UsersInRole([FromBody] string roleName)
         {
-            AppUser? user = await _userManager.FindByNameAsync(model.Username);
-            if (user == null)
+            if (roleName == null)
             {
                 return BadRequest("User not found");
             }
 
-            IdentityResult result = await _userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok(new { message = "Role assigned successfully" });
-            }
+            var result = await _userManager.GetUsersInRoleAsync(roleName);
 
-            return BadRequest(result.Errors);
+            return new JsonResult(result);
         }
 
         #endregion AllGetRequest

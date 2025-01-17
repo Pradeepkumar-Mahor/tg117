@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -41,6 +42,13 @@ namespace tg117.API.Classes
             {
                 var count = await source.CountAsync();
                 var items = await source.Skip((pageNumber) * pageSize).Take(pageSize).ToListAsync();
+                return new PagedList<T>(items, count, pageNumber, pageSize);
+            }
+
+            public static async Task<PagedList<T>> ReturnListAsync(List<T> source, int pageNumber, int pageSize)
+            {
+                var count = source.Count();
+                var items = source.Skip((pageNumber) * pageSize).Take(pageSize).ToList();
                 return new PagedList<T>(items, count, pageNumber, pageSize);
             }
         }
