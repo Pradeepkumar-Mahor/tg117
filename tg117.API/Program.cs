@@ -55,6 +55,8 @@ option.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")))
 //    .AddEntityFrameworkStores<AppDbContext>()
 //    .AddDefaultTokenProviders();
 
+builder.Services.AddDataAccessService();
+
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 6;

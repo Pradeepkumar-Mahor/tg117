@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using tg117.Domain;
 using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Classes
@@ -45,11 +46,16 @@ namespace tg117.API.Classes
                 return new PagedList<T>(items, count, pageNumber, pageSize);
             }
 
-            public static async Task<PagedList<T>> ReturnListAsync(List<T> source, int pageNumber, int pageSize)
+            public static PagedList<T> ReturnList(List<T> source, int pageNumber, int pageSize)
             {
                 var count = source.Count();
                 var items = source.Skip((pageNumber) * pageSize).Take(pageSize).ToList();
                 return new PagedList<T>(items, count, pageNumber, pageSize);
+            }
+
+            internal static async Task<PagedList<Category>> ReturnListAsync(List<Category> query, int pageNumber, int pageSize)
+            {
+                throw new NotImplementedException();
             }
         }
 

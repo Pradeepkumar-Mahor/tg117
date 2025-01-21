@@ -82,6 +82,12 @@ namespace tg117.API.Controllers
                     signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
                     SecurityAlgorithms.HmacSha256));
 
+                //tg117.API.Service.MimeKit mimeKit = new();
+                //mimeKit.SendEmailFromMailKit("PradeepkMahor@gmail.com", "User Login", $@"User Nmae : {user.UserName}, Email :  {user.Email} and Jwt :{token.ToString()}");
+                //tg117.API.Service.EmailService emailService = new();
+
+                //emailService.SendEmail("PradeepkMahor@gmail.com", "User Login", $@"User Nmae : {user.UserName}, Email :  {user.Email} and Jwt :{token.ToString()}");
+
                 return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
             }
 

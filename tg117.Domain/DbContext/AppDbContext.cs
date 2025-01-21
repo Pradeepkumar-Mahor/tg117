@@ -14,6 +14,11 @@ namespace tg117.Domain.DbContext
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+
         public DbSet<Category> Category { get; set; }
     }
 }
