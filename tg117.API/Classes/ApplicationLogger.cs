@@ -9,7 +9,7 @@ namespace tg117.API.Classes
         {
             hostBuilder.UseSerilog((ctx, lc) =>
             {
-                lc.WriteTo.File(new JsonFormatter(), "Log.json");
+                lc.WriteTo.File(new JsonFormatter(), "Log.json", restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error);
             });
         }
     }

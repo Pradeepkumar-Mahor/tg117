@@ -174,7 +174,7 @@ namespace tg117.API.Controllers
             List<Claim> claims =
             [
                 new (JwtRegisteredClaimNames.Email,user.Email??""),
-                new (JwtRegisteredClaimNames.Name,user.UserName??""),
+                new (JwtRegisteredClaimNames.UniqueName,user.UserName??""),
                 new (JwtRegisteredClaimNames.Name,user.FirstName??""),
                 new (JwtRegisteredClaimNames.Name,user.LastName??""),
                 new (JwtRegisteredClaimNames.NameId,user.Id ??""),
