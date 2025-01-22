@@ -101,6 +101,7 @@ namespace tg117.API.Controllers
         //api/account/login
         [AllowAnonymous]
         [HttpPost("login")]
+        [ResponseCache(Duration = 60, VaryByQueryKeys = new[] { "login" })]
         public async Task<ActionResult<AuthResponseDto>> Login(LoginDto loginDto)
         {
             try

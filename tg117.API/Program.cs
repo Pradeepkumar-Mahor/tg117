@@ -28,6 +28,7 @@ IConfigurationSection JWTSetting = builder.Configuration.GetSection("JWTSetting"
 builder.Services.AddControllers();
 
 builder.Services.ConfigureCors();
+builder.Services.AddResponseCaching();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -111,7 +112,7 @@ if (app.Environment.IsDevelopment())
     _ = app.UseSwagger();
     _ = app.UseSwaggerUI();
 }
-
+app.UseResponseCaching();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
