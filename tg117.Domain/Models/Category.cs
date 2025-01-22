@@ -5,11 +5,11 @@ namespace tg117.Domain
     public class Category
     {
         [Key]
-        public Guid Guid { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [Display(Name = "Category Name")]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [Display(Name = "Display Order")]

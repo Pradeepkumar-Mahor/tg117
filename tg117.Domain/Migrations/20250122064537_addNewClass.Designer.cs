@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tg117.Domain.DbContext;
 
@@ -11,9 +12,11 @@ using tg117.Domain.DbContext;
 namespace tg117.Domain.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250122064537_addNewClass")]
+    partial class addNewClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,25 +292,7 @@ namespace tg117.Domain.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("tg117.Domain.Frequency", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("FrequencyCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Frequency");
-                });
-
-            modelBuilder.Entity("tg117.Domain.Models.Course", b =>
+            modelBuilder.Entity("tg117.Domain.Course", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -354,59 +339,22 @@ namespace tg117.Domain.Migrations
                     b.ToTable("Course");
                 });
 
-            modelBuilder.Entity("tg117.Domain.Models.CourseContent", b =>
+            modelBuilder.Entity("tg117.Domain.Frequency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DisplayOrder")
+                    b.Property<int>("FrequencyCount")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsLock")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("CourseContent");
-                });
-
-            modelBuilder.Entity("tg117.Domain.Models.CourseContentDetails", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CourseContentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<TimeOnly>("Duration")
-                        .HasColumnType("time");
-
-                    b.Property<bool>("IsLock")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseContentId");
-
-                    b.ToTable("CourseContentDetails");
+                    b.ToTable("Frequency");
                 });
 
             modelBuilder.Entity("tg117.Domain.Models.OrderDetails", b =>
@@ -486,58 +434,6 @@ namespace tg117.Domain.Migrations
                     b.ToTable("OrderHeader");
                 });
 
-            modelBuilder.Entity("tg117.Domain.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AboutCourse")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Categories")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CourseContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("FrequencyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LongDesc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ProjectBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProjectName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("FrequencyId");
-
-                    b.ToTable("Project");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -589,7 +485,7 @@ namespace tg117.Domain.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("tg117.Domain.Models.Course", b =>
+            modelBuilder.Entity("tg117.Domain.Course", b =>
                 {
                     b.HasOne("tg117.Domain.Category", "Category")
                         .WithMany()
@@ -606,28 +502,6 @@ namespace tg117.Domain.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Frequency");
-                });
-
-            modelBuilder.Entity("tg117.Domain.Models.CourseContent", b =>
-                {
-                    b.HasOne("tg117.Domain.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("tg117.Domain.Models.CourseContentDetails", b =>
-                {
-                    b.HasOne("tg117.Domain.Models.CourseContent", "CourseContent")
-                        .WithMany()
-                        .HasForeignKey("CourseContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CourseContent");
                 });
 
             modelBuilder.Entity("tg117.Domain.Models.OrderDetails", b =>
@@ -638,7 +512,7 @@ namespace tg117.Domain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("tg117.Domain.Models.Course", "Service")
+                    b.HasOne("tg117.Domain.Course", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -647,25 +521,6 @@ namespace tg117.Domain.Migrations
                     b.Navigation("OrderHeader");
 
                     b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("tg117.Domain.Project", b =>
-                {
-                    b.HasOne("tg117.Domain.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("tg117.Domain.Frequency", "Frequency")
-                        .WithMany()
-                        .HasForeignKey("FrequencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Frequency");
                 });
 #pragma warning restore 612, 618
         }

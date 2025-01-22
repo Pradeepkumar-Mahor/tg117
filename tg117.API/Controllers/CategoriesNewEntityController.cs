@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using tg117.Domain;
-using tg117.Domain.DbContext;
 using tg117.Domain.Repos.Interface;
-using tg117.Domain.Repos.Repository;
-using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Controllers
 {
@@ -34,7 +29,7 @@ namespace tg117.API.Controllers
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(Guid id)
         {
-            Category category = _categoryRepository.FindOne(x => x.Guid == id);
+            Category category = _categoryRepository.FindOne(x => x.Id == id);
             if (category == null)
             {
                 return NotFound("The Category record couldn't be found.");
@@ -50,11 +45,11 @@ namespace tg117.API.Controllers
                 return BadRequest("Category is null.");
             }
 
-            category.Guid = Guid.NewGuid();
+            category.Id = Guid.NewGuid();
             _categoryRepository.Add(category);
             return CreatedAtRoute(
                   "Get",
-                  new { Id = category.Guid }, category);
+                  new { category.Id }, category);
         }
 
         [HttpPut("{id}")]
@@ -64,7 +59,7 @@ namespace tg117.API.Controllers
             {
                 return BadRequest("Category is null.");
             }
-            Category categoryToUpdate = _categoryRepository.FindOne(x => category.Guid == id);
+            Category categoryToUpdate = _categoryRepository.FindOne(x => category.Id == id);
             if (categoryToUpdate == null)
             {
                 return NotFound("The Category record couldn't be found.");
@@ -80,7 +75,7 @@ namespace tg117.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            Category category = _categoryRepository.FindOne(x => x.Guid == id);
+            Category category = _categoryRepository.FindOne(x => x.Id == id);
             if (category == null)
             {
                 return NotFound("The category record couldn't be found.");

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
 using System.Text;
 using tg117.Domain;
@@ -16,46 +17,43 @@ using (RandomNumberGenerator random = RandomNumberGenerator.Create())
 }
 
 string secretKey = Convert.ToBase64String(secretBytes);
+IConfigurationSection JWTSetting = builder.Configuration.GetSection("JWTSetting");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization Example : 'Bearer PradeepMahor",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement(){
+        {
+            new OpenApiSecurityScheme{
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "outh2",
+                Name="Bearer",
+                In = ParameterLocation.Header,
+            },
+            new List<string>()
+        }
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(option =>
 option.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
-
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = false,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = "FreeTrained",
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-//        };
-//    });
-//builder.Services.AddDataAccessService();
-
-//builder.Services.AddAuthorization();
-
-//builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
-//{
-//    options.Password.RequiredLength = 8;
-//    options.Password.RequireNonAlphanumeric = true;
-//    options.Password.RequireDigit = true;
-//    options.Password.RequireUppercase = true;
-//    options.Password.RequireLowercase = true;
-//})
-//    .AddEntityFrameworkStores<AppDbContext>()
-//    .AddDefaultTokenProviders();
-
-builder.Services.AddDataAccessService();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
@@ -68,31 +66,32 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(opt =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
+    opt.SaveToken = true;
+    opt.RequireHttpsMetadata = false;
+    opt.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidateAudience = false,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        ValidAudience = JWTSetting["ValidAudience"],
+        ValidIssuer = JWTSetting["ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWTSetting.GetSection("securityKey").Value!))
     };
 });
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("BasicPolicy", policy => policy.RequireRole(roles.RoleBasic));
-    options.AddPolicy("AdminPolicy", policy => policy.RequireRole(roles.RoleAdmin));
-    options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole(roles.RoleSuperAdmin));
+    options.AddPolicy("BasicPolicy", policy => policy.RequireRole(Roles.RoleBasic));
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole(Roles.RoleAdmin));
+    options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole(Roles.RoleSuperAdmin));
 });
 
 builder.Logging.ClearProviders();

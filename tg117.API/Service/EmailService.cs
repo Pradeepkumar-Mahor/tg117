@@ -1,5 +1,5 @@
-﻿using System.Net.Mail;
-using System.Net;
+﻿using System.Net;
+using System.Net.Mail;
 
 namespace tg117.API.Service
 {
@@ -7,11 +7,11 @@ namespace tg117.API.Service
     {
         public void SendEmail(string toEmail, string subject, string body)
         {
-            var fromAddress = new MailAddress("pradeepmahor47@outlook.com", "Pradeepkumar Mahor");
-            var toAddress = new MailAddress(toEmail);
+            MailAddress fromAddress = new("pradeepmahor47@outlook.com", "Pradeepkumar Mahor");
+            MailAddress toAddress = new(toEmail);
             const string fromPassword = "ritsrpzyjrnlsnrb";
 
-            var smtp = new SmtpClient
+            SmtpClient smtp = new()
             {
                 Host = "smtp.office365.com",
                 Port = 587,
@@ -21,7 +21,7 @@ namespace tg117.API.Service
                 Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
             };
 
-            using (var message = new MailMessage(fromAddress, toAddress)
+            using (MailMessage message = new(fromAddress, toAddress)
             {
                 Subject = subject,
                 Body = body

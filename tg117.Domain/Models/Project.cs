@@ -1,29 +1,35 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace tg117.Domain.Models
+namespace tg117.Domain
 {
-    public class Course
+    public class Project
     {
         [Key]
         public Guid Id { get; set; }
 
         [Required]
-        [Display(Name = "Course Name")]
-        public string CourseName { get; set; } = string.Empty;
+        [Display(Name = "Project Name")]
+        public string ProjectName { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "About Course")]
+        public string AboutCourse { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "Course Content")]
+        public string CourseContent { get; set; } = string.Empty;
+
+        [Display(Name = "Description")]
+        public string LongDesc { get; set; } = string.Empty;
 
         [Required]
         public string Categories { get; set; } = string.Empty;
 
-        public string CourseBy { get; set; } = string.Empty;
-
         [Required]
         public double Price { get; set; }
 
-        public int Duration { get; set; }
-
-        [Display(Name = "Description")]
-        public string LongDesc { get; set; } = string.Empty;
+        public string ProjectBy { get; set; } = string.Empty;
 
         [DataType(DataType.ImageUrl)]
         [Display(Name = "Image")]

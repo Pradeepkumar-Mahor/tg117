@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# Default severity for analyzer diagnostics with category 'Naming'
+dotnet_analyzer_diagnostic.category-Naming.severity = none
+
+# CS8073: The result of the expression is always the same since a value of this type is never equal to 'null'
+dotnet_diagnostic.CS8073.severity = none

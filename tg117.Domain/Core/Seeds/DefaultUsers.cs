@@ -18,7 +18,7 @@ namespace tg117.Domain
                 if (user == null)
                 {
                     _ = await userManager.CreateAsync(defaultUser, "123Pa$$word!");
-                    _ = await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
+                    _ = await userManager.AddToRoleAsync(defaultUser, Rolenum.Basic.ToString());
                 }
             }
         }
@@ -37,9 +37,9 @@ namespace tg117.Domain
                 if (user == null)
                 {
                     _ = await userManager.CreateAsync(defaultUser, "123Pa$$word!");
-                    _ = await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
-                    _ = await userManager.AddToRoleAsync(defaultUser, Roles.Admin.ToString());
-                    _ = await userManager.AddToRoleAsync(defaultUser, Roles.SuperAdmin.ToString());
+                    _ = await userManager.AddToRoleAsync(defaultUser, Rolenum.Basic.ToString());
+                    _ = await userManager.AddToRoleAsync(defaultUser, Rolenum.Admin.ToString());
+                    _ = await userManager.AddToRoleAsync(defaultUser, Rolenum.SuperAdmin.ToString());
                 }
                 //  await roleManager.SeedClaimsForSuperAdmin();
             }
@@ -48,7 +48,9 @@ namespace tg117.Domain
         private static async Task SeedClaimsForSuperAdmin(this RoleManager<IdentityRole> roleManager)
         {
             IdentityRole? adminRole = await roleManager.FindByNameAsync("SuperAdmin");
+#pragma warning disable CS8604 // Possible null reference argument.
             _ = await roleManager.SetRoleNameAsync(role: adminRole, "Admin");
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         public static async Task AddPermissionClaim(this RoleManager<IdentityRole> roleManager, IdentityRole role, string module)

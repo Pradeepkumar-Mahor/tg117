@@ -1,22 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using NuGet.Protocol;
-using tg117.API.Models.Account;
+using tg117.API.Dtos;
 using tg117.Domain;
 using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Controllers
 {
-    [Authorize(Roles = roles.RoleAdmin)]
+    [Authorize(Roles = Roles.RoleAdmin)]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+
         private readonly RoleManager<IdentityRole> _roleManager;
+
         private readonly IConfiguration _configuration;
 
         public AdminController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
@@ -33,7 +32,7 @@ namespace tg117.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAdminUser([FromBody] Register model)
+        public async Task<IActionResult> RegisterAdminUser([FromBody] RegisterDto model)
         {
             AppUser user = new()
             {
@@ -51,11 +50,11 @@ namespace tg117.API.Controllers
 
             if (result.Succeeded)
             {
-                if (!_roleManager.RoleExistsAsync(roleName: roles.RoleAdmin).GetAwaiter().GetResult())
+                if (!_roleManager.RoleExistsAsync(roleName: Roles.RoleAdmin).GetAwaiter().GetResult())
                 {
-                    _ = _roleManager.CreateAsync(new IdentityRole(roles.RoleAdmin)).GetAwaiter().GetResult();
+                    _ = _roleManager.CreateAsync(new IdentityRole(Roles.RoleAdmin)).GetAwaiter().GetResult();
                 }
-                _ = await _userManager.AddToRoleAsync(user, roles.RoleAdmin);
+                _ = await _userManager.AddToRoleAsync(user, Roles.RoleAdmin);
                 return Ok(new { message = "User registered as Admin Role successfully" });
             }
 
@@ -80,7 +79,7 @@ namespace tg117.API.Controllers
         }
 
         [HttpPost("assign-role")]
-        public async Task<IActionResult> AssignRole([FromBody] UserRole model)
+        public async Task<IActionResult> AssignRole([FromBody] UserRoleDto model)
         {
             AppUser? user = await _userManager.FindByNameAsync(model.Username);
             if (user == null)
@@ -106,16 +105,16 @@ namespace tg117.API.Controllers
             {
                 return BadRequest("User not found");
             }
-            var query = _userManager.Users;
+            IQueryable<AppUser> query = _userManager.Users;
 
-            var tt =
-                    (await PagedList<AppUser>
+            PagedList<AppUser> tt =
+                    await PagedList<AppUser>
                         .CreateAsync
                             (query,
                                 queryParams.PageNumber,
                                 queryParams.PageSize
                             )
-                     );
+                     ;
 
             return new JsonResult(tt);
         }
@@ -127,16 +126,16 @@ namespace tg117.API.Controllers
             {
                 return BadRequest("User not found");
             }
-            var query = _roleManager.Roles;
+            IQueryable<IdentityRole> query = _roleManager.Roles;
 
-            var tt =
-                    (await PagedList<IdentityRole>
+            PagedList<IdentityRole> tt =
+                    await PagedList<IdentityRole>
                         .CreateAsync
                             (query,
                                 queryParams.PageNumber,
                                 queryParams.PageSize
                             )
-                     );
+                     ;
 
             return new JsonResult(tt);
         }
@@ -165,7 +164,7 @@ namespace tg117.API.Controllers
                 return BadRequest("User not found");
             }
 
-            var result = await _userManager.GetUsersInRoleAsync(roleName);
+            IList<AppUser> result = await _userManager.GetUsersInRoleAsync(roleName);
 
             return new JsonResult(result);
         }

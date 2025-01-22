@@ -7,7 +7,7 @@ namespace tg117.API.Service
     {
         public void SendEmailFromMailKit(string toEmail, string subject, string body)
         {
-            var message = new MimeMessage();
+            MimeMessage message = new();
             message.From.Add(new MailboxAddress("Pradeepkumar Mahor", "pradeepmahor47@outlook.com"));
             message.To.Add(new MailboxAddress("", toEmail));
             message.Subject = subject;
@@ -17,12 +17,12 @@ namespace tg117.API.Service
                 Text = body
             };
 
-            using (var client = new SmtpClient())
+            using (SmtpClient client = new())
             {
                 client.Connect("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
                 client.Authenticate("pradeepmahor47@outlook.com", "ritsrpzyjrnlsnrb");
 
-                client.Send(message);
+                _ = client.Send(message);
                 client.Disconnect(true);
             }
         }

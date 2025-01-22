@@ -1,8 +1,9 @@
-﻿namespace tg117.API.Models.Account
+﻿namespace tg117.API.Dtos
 {
-    public class UserRole
+    public class UserRoleDto
     {
         public string Username { get; set; } = string.Empty;
+
         public string Role { get; set; } = string.Empty;
     }
 }

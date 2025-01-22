@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using tg117.Domain.DbContext;
 
 namespace tg117.Domain.Core
@@ -20,27 +15,27 @@ namespace tg117.Domain.Core
 
         public void Add(TEntity entity)
         {
-            _appDbContext.Set<TEntity>().Add(entity);
-            _appDbContext.SaveChanges();
+            _ = _appDbContext.Set<TEntity>().Add(entity);
+            _ = _appDbContext.SaveChanges();
         }
 
         public void AddMany(IEnumerable<TEntity> entities)
         {
             _appDbContext.Set<TEntity>().AddRange(entities);
-            _appDbContext.SaveChanges();
+            _ = _appDbContext.SaveChanges();
         }
 
         public void Delete(TEntity entity)
         {
-            _appDbContext.Set<TEntity>().Remove(entity);
-            _appDbContext.SaveChanges();
+            _ = _appDbContext.Set<TEntity>().Remove(entity);
+            _ = _appDbContext.SaveChanges();
         }
 
         public void DeleteMany(Expression<Func<TEntity, bool>> predicate)
         {
-            var entities = Find(predicate);
+            IQueryable<TEntity> entities = Find(predicate);
             _appDbContext.Set<TEntity>().RemoveRange(entities);
-            _appDbContext.SaveChanges();
+            _ = _appDbContext.SaveChanges();
         }
 
         public TEntity FindOne(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null)
@@ -60,8 +55,8 @@ namespace tg117.Domain.Core
 
         public void Update(TEntity entity)
         {
-            _appDbContext.Set<TEntity>().Update(entity);
-            _appDbContext.SaveChanges();
+            _ = _appDbContext.Set<TEntity>().Update(entity);
+            _ = _appDbContext.SaveChanges();
         }
 
         public bool Any(Expression<Func<TEntity, bool>> predicate)
@@ -77,18 +72,18 @@ namespace tg117.Domain.Core
         private DbSet<TEntity> Get(FindOptions? findOptions = null)
         {
             findOptions ??= new FindOptions();
-            var entity = _appDbContext.Set<TEntity>();
+            DbSet<TEntity> entity = _appDbContext.Set<TEntity>();
             if (findOptions.IsAsNoTracking && findOptions.IsIgnoreAutoIncludes)
             {
-                entity.IgnoreAutoIncludes().AsNoTracking();
+                _ = entity.IgnoreAutoIncludes().AsNoTracking();
             }
             else if (findOptions.IsIgnoreAutoIncludes)
             {
-                entity.IgnoreAutoIncludes();
+                _ = entity.IgnoreAutoIncludes();
             }
             else if (findOptions.IsAsNoTracking)
             {
-                entity.AsNoTracking();
+                _ = entity.AsNoTracking();
             }
             return entity;
         }

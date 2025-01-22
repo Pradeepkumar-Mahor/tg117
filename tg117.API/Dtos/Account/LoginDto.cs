@@ -1,8 +1,9 @@
-﻿namespace tg117.API.Models.Account
+﻿namespace tg117.API.Dtos
 {
-    public class Login
+    public class LoginDto
     {
         public string Username { get; set; } = string.Empty;
+
         public string Password { get; set; } = string.Empty;
     }
 }

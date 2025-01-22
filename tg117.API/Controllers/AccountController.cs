@@ -1,97 +1,219 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using tg117.API.Models.Account;
+using tg117.API.Dtos;
 using tg117.Domain;
 
 namespace tg117.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+
         private readonly RoleManager<IdentityRole> _roleManager;
+
         private readonly IConfiguration _configuration;
 
-        public AccountController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AccountController(UserManager<AppUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        IConfiguration configuration
+        )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register model)
-        {
-            AppUser user = new()
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                MiddelName = model.MiddelName,
-                City = model.City,
-                State = model.State,
-                Country = model.Country,
-                PostalCode = model.PostalCode
-            };
-            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+        // api/account/register
 
-            if (result.Succeeded)
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<ActionResult<string>> Register(RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid)
             {
-                if (!_roleManager.RoleExistsAsync(roleName: roles.RoleBasic).GetAwaiter().GetResult())
-                {
-                    _ = _roleManager.CreateAsync(new IdentityRole(roles.RoleBasic)).GetAwaiter().GetResult();
-                }
-                _ = await _userManager.AddToRoleAsync(user, roles.RoleBasic);
-                return Ok(new { message = "User registered successfully" });
+                return BadRequest(ModelState);
             }
 
-            return BadRequest(result.Errors);
+            var user = new AppUser
+            {
+                Email = registerDto.Email,
+                UserName = registerDto.Username,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                MiddelName = registerDto.MiddelName,
+                City = registerDto.City,
+                State = registerDto.State,
+                Country = registerDto.Country,
+                PostalCode = registerDto.PostalCode
+            };
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            if (registerDto.Roles is null)
+            {
+                await _userManager.AddToRoleAsync(user, Roles.RoleBasic);
+            }
+            else
+            {
+                foreach (var role in registerDto.Roles)
+                {
+                    await _userManager.AddToRoleAsync(user, role);
+                }
+            }
+
+            return Ok(new AuthResponseDto
+            {
+                IsSuccess = true,
+                Message = "Account Created Successfully!"
+            });
         }
 
+        //api/account/login
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login model)
+        public async Task<ActionResult<AuthResponseDto>> Login(LoginDto loginDto)
         {
-            AppUser? user = await _userManager.FindByNameAsync(model.Username);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            AppUser? user = await _userManager.FindByNameAsync(loginDto.Username);
             if (user == null)
             {
-                user = await _userManager.FindByEmailAsync(model.Username);
+                user = await _userManager.FindByEmailAsync(loginDto.Username);
             }
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+
+            if (user is null)
             {
-                IList<string> userRoles = await _userManager.GetRolesAsync(user);
-
-                List<Claim> authClaims = new()
+                return Unauthorized(new AuthResponseDto
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-
-                authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-                JwtSecurityToken token = new(
-                    issuer: _configuration["Jwt:Issuer"],
-                    expires: DateTime.Now.AddMinutes(double.Parse(_configuration["Jwt:ExpiryMinutes"]!)),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
-                    SecurityAlgorithms.HmacSha256));
-
-                //tg117.API.Service.MimeKit mimeKit = new();
-                //mimeKit.SendEmailFromMailKit("PradeepkMahor@gmail.com", "User Login", $@"User Nmae : {user.UserName}, Email :  {user.Email} and Jwt :{token.ToString()}");
-                //tg117.API.Service.EmailService emailService = new();
-
-                //emailService.SendEmail("PradeepkMahor@gmail.com", "User Login", $@"User Nmae : {user.UserName}, Email :  {user.Email} and Jwt :{token.ToString()}");
-
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+                    IsSuccess = false,
+                    Message = "User not found",
+                });
             }
 
-            return Unauthorized();
+            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+
+            if (!result)
+            {
+                return Unauthorized(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = "Invalid Password."
+                });
+            }
+
+            var token = GenerateToken(user);
+
+            return Ok(new AuthResponseDto
+            {
+                Token = token,
+                IsSuccess = true,
+                Message = "Login Success."
+            });
+        }
+
+        private string GenerateToken(AppUser user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var key = Encoding.ASCII
+            .GetBytes(_configuration.GetSection("JWTSetting").GetSection("securityKey").Value!);
+
+            var roles = _userManager.GetRolesAsync(user).Result;
+
+            List<Claim> claims =
+            [
+                new (JwtRegisteredClaimNames.Email,user.Email??""),
+                new (JwtRegisteredClaimNames.Name,user.UserName??""),
+                new (JwtRegisteredClaimNames.Name,user.FirstName??""),
+                new (JwtRegisteredClaimNames.Name,user.LastName??""),
+                new (JwtRegisteredClaimNames.NameId,user.Id ??""),
+                new (JwtRegisteredClaimNames.Aud,
+                _configuration.GetSection("JWTSetting").GetSection("validAudience").Value!),
+                new (JwtRegisteredClaimNames.Iss,_configuration.GetSection("JWTSetting").GetSection("validIssuer").Value!)
+            ];
+
+            foreach (var role in roles)
+
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+
+        //api/account/detail
+        [HttpGet("detail")]
+        public async Task<ActionResult<UserDetailDto>> GetUserDetail()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(currentUserId!);
+
+            if (user is null)
+            {
+                return NotFound(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = "User not found"
+                });
+            }
+
+            return Ok(new UserDetailDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                MiddleName = user.MiddelName,
+                Roles = [.. await _userManager.GetRolesAsync(user)],
+                PhoneNumber = user.PhoneNumber,
+                PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                AccessFailedCount = user.AccessFailedCount,
+            });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDetailDto>>> GetUsers()
+        {
+            var users = await _userManager.Users.Select(u => new UserDetailDto
+            {
+                Id = u.Id,
+                Email = u.Email,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                MiddleName = u.MiddelName,
+                Roles = _userManager.GetRolesAsync(u).Result.ToArray()
+            }).ToListAsync();
+
+            return Ok(users);
         }
     }
 }

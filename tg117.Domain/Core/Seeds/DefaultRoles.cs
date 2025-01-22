@@ -6,9 +6,9 @@ namespace tg117.Domain
     {
         public static async Task SeedAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _ = await roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
-            _ = await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
-            _ = await roleManager.CreateAsync(new IdentityRole(Roles.Basic.ToString()));
+            _ = await roleManager.CreateAsync(new IdentityRole(Rolenum.SuperAdmin.ToString()));
+            _ = await roleManager.CreateAsync(new IdentityRole(Rolenum.Admin.ToString()));
+            _ = await roleManager.CreateAsync(new IdentityRole(Rolenum.Basic.ToString()));
         }
     }
 }

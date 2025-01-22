@@ -4,7 +4,7 @@ using tg117.Domain;
 
 namespace tg117.API.Controllers
 {
-    [Authorize(Roles = roles.RoleBasic)]
+    [Authorize(Roles = Roles.RoleBasic)]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

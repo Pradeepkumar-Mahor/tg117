@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Numerics;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using tg117.Domain;
-using static tg117.API.Classes.GenericClass;
 
 namespace tg117.API.Classes
 {
@@ -41,19 +38,19 @@ namespace tg117.API.Classes
 
             public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
             {
-                var count = await source.CountAsync();
-                var items = await source.Skip((pageNumber) * pageSize).Take(pageSize).ToListAsync();
+                int count = await source.CountAsync();
+                List<T> items = await source.Skip(pageNumber * pageSize).Take(pageSize).ToListAsync();
                 return new PagedList<T>(items, count, pageNumber, pageSize);
             }
 
             public static PagedList<T> ReturnList(List<T> source, int pageNumber, int pageSize)
             {
-                var count = source.Count();
-                var items = source.Skip((pageNumber) * pageSize).Take(pageSize).ToList();
+                int count = source.Count;
+                List<T> items = source.Skip(pageNumber * pageSize).Take(pageSize).ToList();
                 return new PagedList<T>(items, count, pageNumber, pageSize);
             }
 
-            internal static async Task<PagedList<Category>> ReturnListAsync(List<Category> query, int pageNumber, int pageSize)
+            internal static Task<PagedList<Category>> ReturnListAsync(List<Category> query, int pageNumber, int pageSize)
             {
                 throw new NotImplementedException();
             }
@@ -62,11 +59,13 @@ namespace tg117.API.Classes
         public static string JSONSerialize<T>(T obj)
         {
             string retVal = String.Empty;
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                DataContractJsonSerializer serializer = new(type: obj.GetType());
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 serializer.WriteObject(ms, obj);
-                var byteArray = ms.ToArray();
+                byte[] byteArray = ms.ToArray();
                 retVal = Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
             }
             return retVal;

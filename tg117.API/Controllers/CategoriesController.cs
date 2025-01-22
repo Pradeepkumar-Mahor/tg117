@@ -57,7 +57,7 @@ namespace tg117.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(Guid id, Category category)
         {
-            if (id != category.Guid)
+            if (id != category.Id)
             {
                 return BadRequest();
             }
@@ -88,14 +88,14 @@ namespace tg117.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            if (category.Guid == null)
+            if (category.Id == null)
             {
-                category.Guid = Guid.NewGuid();
+                category.Id = Guid.NewGuid();
             }
             _ = _context.Category.Add(category);
             _ = await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCategory", new { id = category.Guid }, category);
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
         // DELETE: api/Categories/5
@@ -116,7 +116,7 @@ namespace tg117.API.Controllers
 
         private bool CategoryExists(Guid id)
         {
-            return _context.Category.Any(e => e.Guid == id);
+            return _context.Category.Any(e => e.Id == id);
         }
     }
 }

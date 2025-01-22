@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using tg117.Domain.Core;
+﻿using tg117.Domain.Core;
 using tg117.Domain.Repos.Interface;
 using tg117.Domain.Repos.Repository;
 
@@ -19,8 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             #region GenericEntityRepos
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            _ = services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            _ = services.AddScoped<ICategoryRepository, CategoryRepository>();
             //services.AddTransient<IEmailSender, MailKit>();
 
             #endregion GenericEntityRepos
