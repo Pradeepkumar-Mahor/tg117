@@ -5,10 +5,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
 using System.Text;
+using tg117.API.Classes;
+using tg117.API.Service;
 using tg117.Domain;
 using tg117.Domain.DbContext;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Host.ConfigureSerilog();
 
 byte[] secretBytes = new byte[64];
 using (RandomNumberGenerator random = RandomNumberGenerator.Create())
@@ -22,7 +26,9 @@ IConfigurationSection JWTSetting = builder.Configuration.GetSection("JWTSetting"
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.ConfigureCors();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

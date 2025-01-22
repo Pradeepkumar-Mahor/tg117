@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
+using tg117.API.Dtos;
 using tg117.Domain;
 using tg117.Domain.Repos.Interface;
 
@@ -23,6 +25,7 @@ namespace tg117.API.Controllers
         public IActionResult Get()
         {
             IEnumerable<Category> employees = _categoryRepository.GetAll();
+
             return Ok(employees);
         }
 

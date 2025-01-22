@@ -18,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             _ = services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             _ = services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             //services.AddTransient<IEmailSender, MailKit>();
 
             #endregion GenericEntityRepos
