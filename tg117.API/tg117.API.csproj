@@ -37,4 +37,8 @@
     <ProjectReference Include="..\tg117.Domain\tg117.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Imp\" />
+  </ItemGroup>
+
 </Project>
