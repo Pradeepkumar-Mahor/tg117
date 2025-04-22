@@ -1,0 +1,21 @@
+<h1 class="text-3xl ">Hi, {{title}} </h1>
+<h1 class="text-3xl font-bold underline">
+  Hello world!
+</h1>
+<p>Read Local JSON file student data using typescript HttpClient</p>
+<table id="student">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Gender</th>
+  </tr>
+  <tr *ngFor="let student of studentData">
+    <td>{{student.id}}</td>
+    <td>{{student.name}}</td>
+    <td>{{student.email}}</td>
+    <td>{{student.gender}}</td>
+  </tr>
+</table>
+
+
